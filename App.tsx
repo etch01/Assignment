@@ -8,16 +8,16 @@
 
 import React from 'react';
 import type {Node} from 'react';
-import {
-  SafeAreaView,
-} from 'react-native';
+import { Provider } from 'react-redux';
+import NavContainer from './src/Navigation/AppContainer';
+import {store} from  './src/Redux/store';
 
 const App: () => Node = () => {
 
   return (
-    <SafeAreaView>
-
-    </SafeAreaView>
+    <Provider store={store}>
+      <NavContainer/>
+    </Provider>
   );
 };
 
