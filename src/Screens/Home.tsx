@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import { StyleSheet, Text, View,SafeAreaView, Dimensions, TouchableOpacity } from 'react-native';
-import Header from '../Components/Header';
+import { StyleSheet, Text, View,SafeAreaView, Dimensions, TouchableOpacity, FlatList } from 'react-native';
 import {colors} from '../Constants/colors';
+import Header from '../Components/Header';
+import MovieCard from '../Components/MovieCard';
 
 const {width, height} = Dimensions.get('window');
 
@@ -11,6 +12,8 @@ const Home = () => {
     const filter = (filterName:string) :void =>{
 
     }
+
+    const _keyExtractor = (index:Number) => index.toString();
     
     return (
         <SafeAreaView style={styles.container}>
@@ -34,6 +37,15 @@ const Home = () => {
                 </View>
                 <View style={styles.space}/>
             </View>
+            {/* Movies list */}
+            <FlatList  
+                    data={[1,2,3,4]}  
+                    renderItem={({item}) =>{
+                     return <MovieCard/>
+                    }}
+                    keyExtractor={_keyExtractor}
+                    style={{flex: 1,marginTop:height*0.02}}
+                />  
         </SafeAreaView>
     )
 }
@@ -60,8 +72,6 @@ const styles = StyleSheet.create({
         alignItems:'center',
         justifyContent:'center',
         borderRadius:20,
-        backgroundColor:'pink',
-        // width:width/3.8,
         flex:1,
         height:height*0.05
     }
