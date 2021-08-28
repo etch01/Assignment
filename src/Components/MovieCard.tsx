@@ -1,24 +1,42 @@
 import React from 'react'
 import { StyleSheet, Text, View, Dimensions, Image} from 'react-native'
 import { colors } from '../Constants/colors';
+import {Movies} from '../Models/movies'
+import moment from 'moment'
 
 const {width, height} = Dimensions.get('window');
 
-const MovieCard = () => {
+interface Iprops{
+    movie:Movies;
+    navigation:any;
+}
+
+const MovieCard = ({movie}:Iprops) => {
+    
     return (
         <View style={styles.cardContainer}>
             <View style={{flex:.5}}/>
             <View style={styles.card}>
                 <View style={styles.imageArea}>
-                    <View style={{flex:1,overflow:'hidden',backgroundColor:'cyan',borderRadius:20 }}>
-                        <Image style={{flex:1}} source={{uri:'https://i5.walmartimages.com/asr/3f92e597-86d8-498c-ae2d-257014fad650_1.b16e4b4a798d31c2416fbe338eb4af8b.jpeg'}}/>
+                    <View style={{flex:1,overflow:'hidden',backgroundColor:'cyan',borderRadius:10 }}>
+                        <Image style={{flex:1}} source={{uri:`https://image.tmdb.org/t/p/w500${movie.poster_path}`}}/>
                     </View>
                 </View>
                 <View style={styles.rightSide}>
-                    <Text style={styles.name}>Interstellar</Text>
-                    <Text>November 5, 2014</Text>
-                    <View style={styles.category}>
-                        <Text>Action</Text>
+                    <Text style={styles.name}>{movie.title}</Text>
+                    <Text style={{marginTop:height*0.02}}>{moment(movie.release_date).format("ll")}</Text>
+                    <View style={{flexDirection:'row', flexWrap: 'wrap',padding:1,marginTop:height*0.02}}>
+                    {
+                        movie.genre_ids.map((id)=>{
+                            return (
+                                <View style={{marginRight:3,marginTop:3}}>
+                                    <View key={id} style={styles.category}>
+                                        <Text>Action</Text>
+                                    </View>
+                                 </View>
+                            )
+                        })
+                    }
                     </View>
                     <Text style={styles.rate}>86%</Text>
                 </View>
@@ -32,7 +50,7 @@ export default MovieCard
 
 const styles = StyleSheet.create({
     cardContainer:{
-        height:height /5,
+        minHeight:height /5,
         flexDirection:'row'
     },
     card:{
@@ -57,7 +75,8 @@ const styles = StyleSheet.create({
         paddingTop:10,
         paddingBottom:10,
         paddingLeft:10,
-        paddingRight:10
+        paddingRight:10,
+        marginRight:10
     },
     rightSide:{
         flex:2,
@@ -76,12 +95,14 @@ const styles = StyleSheet.create({
     },
     name:{
         fontSize:20,
-        fontWeight:'bold'
+        fontWeight:'bold',
+        marginTop:height*0.01
     },
     rate:{
         textAlign:'right',
         color:colors.mainColor,
         fontSize:20,
-        fontWeight:'bold'
+        fontWeight:'bold',
+        marginBottom:height*0.01
     }
 })

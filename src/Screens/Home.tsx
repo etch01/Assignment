@@ -1,19 +1,36 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View,SafeAreaView, Dimensions, TouchableOpacity, FlatList } from 'react-native';
 import {colors} from '../Constants/colors';
+import { useDispatch, useSelector } from 'react-redux';
+import {getMoviesAction} from '../Redux/Actions/moviesAction';
+import {Movies} from '../Models/movies';
 import Header from '../Components/Header';
 import MovieCard from '../Components/MovieCard';
+import Skeleton from '../Components/skeleton';
 
 const {width, height} = Dimensions.get('window');
 
-const Home = () => {
+interface Iprops{
+    navigation:any
+}
+
+const Home = ({navigation}:Iprops) => {
     const [selectedFilter,setSelectedFilter] = useState<string>('');
+    const [loading,setLoading] = useState<boolean>(false);
+    const moviesList = useSelector((state) => state.moviesRequestReducer.MoviesList);
+    const dispatch = useDispatch()
 
     const filter = (filterName:string) :void =>{
-
+        //If you must have an API key or a secret to access some resource from your app, the most secure way to handle this would be to build an orchestration layer between your app and the resource.
+        dispatch(getMoviesAction(`/movie/${filterName}?api_key=4f298a53e552283bee957836a529baec`,(callback)=>setLoading(callback.loading)))
     }
 
-    const _keyExtractor = (index:Number) => index.toString();
+    //get all upcoming movies by default
+    useEffect(()=>{        
+        filter('upcoming')        
+    },[])
+
+    const _keyExtractor = (item:Movies,index:Number) => item.id;
     
     return (
         <SafeAreaView style={styles.container}>
@@ -38,14 +55,14 @@ const Home = () => {
                 <View style={styles.space}/>
             </View>
             {/* Movies list */}
-            <FlatList  
-                    data={[1,2,3,4]}  
+            {!loading?<FlatList  
+                    data={moviesList}  
                     renderItem={({item}) =>{
-                     return <MovieCard/>
+                     return <MovieCard navigation={navigation} movie={item}/>
                     }}
                     keyExtractor={_keyExtractor}
                     style={{flex: 1,marginTop:height*0.02}}
-                />  
+                /> :<><Skeleton/><Skeleton/><Skeleton/><Skeleton/><Skeleton/></>}
         </SafeAreaView>
     )
 }

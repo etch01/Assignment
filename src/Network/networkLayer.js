@@ -6,11 +6,11 @@ export class NetworkLayer {
 
   constructor() {
     //API Base URL
-    this.#API_HOST = 'http://api.themoviedb.org/3';
+    this.#API_HOST = 'https://api.themoviedb.org/3';
   }
 
   //Get Request use then callback to use resolved promise
-  get_request = (endpoint, access_token) => {
+  get_request = (endpoint) => {
     const url = this.#API_HOST + endpoint;
     return new Promise(function (resolve, reject) {
       try {
@@ -21,9 +21,6 @@ export class NetworkLayer {
         }, 31000);
         axios
           .get(url, {
-            headers: {
-              Token: access_token,
-            },
             timeout: 30000,
             cancelToken: source.token,
           })
