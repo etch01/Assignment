@@ -3,6 +3,7 @@ export interface Movies{
     title:string;
     release_date:string;
     poster_path:string;
-    avg:string;
+    vote_average:number;
+    vote_count:number;
     genre_ids:Array<number>
 }

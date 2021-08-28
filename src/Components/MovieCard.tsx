@@ -41,7 +41,7 @@ const MovieCard = ({movie}:Iprops) => {
                         })
                     }
                     </View>
-                    <Text style={styles.rate}>86%</Text>
+                    {movie.vote_count>0?<Text style={styles.rate}>{movie.vote_average * 10}%</Text>:<Text style={styles.rate}>No votes yet</Text>}
                 </View>
             </View>
             <View style={{flex:.5}}/>
