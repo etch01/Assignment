@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, Dimensions, Image} from 'react-native'
+import { StyleSheet, Text, View, Dimensions, Image, TouchableOpacity} from 'react-native'
 import { colors } from '../Constants/colors';
 import {Movies} from '../Models/movies'
 import { useSelector } from 'react-redux';
@@ -12,21 +12,24 @@ interface Iprops{
     navigation:any;
 }
 
-const MovieCard = ({movie}:Iprops) => {
+const MovieCard = ({movie, navigation}:Iprops) => {
     const genreList = useSelector((state) => state.genreRequestReducer.genres);
 
     return (
-        <View style={styles.cardContainer}>
+        <TouchableOpacity style={styles.cardContainer} onPress={()=>navigation.navigate('MovieDetails',{id:movie.id})}>
             <View style={{flex:.5}}/>
             <View style={styles.card}>
+                {/* Image */}
                 <View style={styles.imageArea}>
                     <View style={{flex:1,overflow:'hidden',borderRadius:10 }}>
                         <Image style={{flex:1}} source={{uri:`https://image.tmdb.org/t/p/w500${movie.poster_path}`}}/>
                     </View>
                 </View>
                 <View style={styles.rightSide}>
+                    {/* title and release date */}
                     <Text style={styles.name}>{movie.title}</Text>
                     <Text style={{marginTop:height*0.02}}>{moment(movie.release_date).format("ll")}</Text>
+                    {/* genre list */}
                     <View style={{flexDirection:'row', flexWrap: 'wrap',padding:1,marginTop:height*0.02}}>
                     {
                         movie.genre_ids.map((id)=>{ 
@@ -41,11 +44,12 @@ const MovieCard = ({movie}:Iprops) => {
                         })
                     }
                     </View>
+                    {/* vote rate */}
                     {movie.vote_count>0?<Text style={styles.rate}>{movie.vote_average * 10}%</Text>:<Text style={styles.rate}>No votes yet</Text>}
                 </View>
             </View>
             <View style={{flex:.5}}/>
-        </View>
+        </TouchableOpacity>
     )
 }
 

@@ -31,7 +31,7 @@ const Home = ({navigation}:Iprops) => {
         //Another solution but not ideal is storing api key in .env
         dispatch(getMoviesAction(`/movie/${filterName}?api_key=4f298a53e552283bee957836a529baec`,(callback)=>setLoading(callback.loading)))
         setSelectedFilter(filterName)
-        setPagingEnded(false) // reset pagination
+        setPagingEnded(false) // reset pagination when filter changed
     }
 
     //get all genre
@@ -43,8 +43,6 @@ const Home = ({navigation}:Iprops) => {
       const pagingGenreList = ():void =>{
         setPaging(true)
         dispatch(pagingMovieAction(`/movie/${selectedFilter}?page=${page}&&api_key=4f298a53e552283bee957836a529baec`,(callback)=>{
-            console.log('love ya',callback);
-
             setPage(page+1)
             //Check if there is no more data to paginate
             if (callback.res?.length == 0){
