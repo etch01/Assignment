@@ -2,6 +2,7 @@ import React from 'react'
 import { StyleSheet, Text, View, Dimensions, Image} from 'react-native'
 import { colors } from '../Constants/colors';
 import {Movies} from '../Models/movies'
+import { useSelector } from 'react-redux';
 import moment from 'moment'
 
 const {width, height} = Dimensions.get('window');
@@ -12,7 +13,8 @@ interface Iprops{
 }
 
 const MovieCard = ({movie}:Iprops) => {
-    
+    const genreList = useSelector((state) => state.genreRequestReducer.genres);
+
     return (
         <View style={styles.cardContainer}>
             <View style={{flex:.5}}/>
@@ -27,11 +29,12 @@ const MovieCard = ({movie}:Iprops) => {
                     <Text style={{marginTop:height*0.02}}>{moment(movie.release_date).format("ll")}</Text>
                     <View style={{flexDirection:'row', flexWrap: 'wrap',padding:1,marginTop:height*0.02}}>
                     {
-                        movie.genre_ids.map((id)=>{
+                        movie.genre_ids.map((id)=>{ 
+                            const genreName = genreList?.filter(g=>g.id == id)[0].name                         
                             return (
-                                <View style={{marginRight:3,marginTop:3}}>
-                                    <View key={id} style={styles.category}>
-                                        <Text>Action</Text>
+                                <View key={id} style={{marginRight:3,marginTop:3}}>
+                                    <View style={styles.category}>
+                                        <Text>{genreName}</Text>
                                     </View>
                                  </View>
                             )

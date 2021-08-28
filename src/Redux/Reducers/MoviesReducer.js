@@ -5,7 +5,8 @@ const initialState = {
 
 
     MoviesList: [],
-    isLoading: false
+    genre:[],
+    isLoading: false,
 
 };
 const moviesRequestReducer = (state = initialState, action) => {

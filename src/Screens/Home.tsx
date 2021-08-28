@@ -3,6 +3,8 @@ import { StyleSheet, Text, View,SafeAreaView, Dimensions, TouchableOpacity, Flat
 import {colors} from '../Constants/colors';
 import { useDispatch, useSelector } from 'react-redux';
 import {getMoviesAction} from '../Redux/Actions/moviesAction';
+import {getGenreAction} from '../Redux/Actions/genreAcrion';
+
 import {Movies} from '../Models/movies';
 import Header from '../Components/Header';
 import MovieCard from '../Components/MovieCard';
@@ -18,16 +20,25 @@ const Home = ({navigation}:Iprops) => {
     const [selectedFilter,setSelectedFilter] = useState<string>('');
     const [loading,setLoading] = useState<boolean>(false);
     const moviesList = useSelector((state) => state.moviesRequestReducer.MoviesList);
+
     const dispatch = useDispatch()
 
     const filter = (filterName:string) :void =>{
-        //If you must have an API key or a secret to access some resource from your app, the most secure way to handle this would be to build an orchestration layer between your app and the resource.
+        //If you must have an API key or a secret to access some resource from your app, the most secure way to handle this would be to build an orchestration layer between app and the resource.
+        //Another solution but not ideal is storing api key in .env
         dispatch(getMoviesAction(`/movie/${filterName}?api_key=4f298a53e552283bee957836a529baec`,(callback)=>setLoading(callback.loading)))
+        setSelectedFilter(filterName)
+    }
+
+    //get all genre
+    const getGenreList = ():void =>{
+        dispatch(getGenreAction('/genre/movie/list?api_key=4f298a53e552283bee957836a529baec',(callback)=>null))
     }
 
     //get all upcoming movies by default
-    useEffect(()=>{        
-        filter('upcoming')        
+    useEffect(()=>{
+        getGenreList();
+        filter('upcoming');
     },[])
 
     const _keyExtractor = (item:Movies,index:Number) => item.id;
