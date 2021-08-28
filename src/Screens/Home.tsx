@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View,SafeAreaView, Dimensions, TouchableOpacity, FlatList } from 'react-native';
+import { StyleSheet, Text, View,SafeAreaView, Dimensions, TouchableOpacity, FlatList, ActivityIndicator, Alert } from 'react-native';
 import {colors} from '../Constants/colors';
 import { useDispatch, useSelector } from 'react-redux';
-import {getMoviesAction} from '../Redux/Actions/moviesAction';
+import {getMoviesAction,pagingMovieAction} from '../Redux/Actions/moviesAction';
 import {getGenreAction} from '../Redux/Actions/genreAcrion';
 
 import {Movies} from '../Models/movies';
@@ -19,6 +19,9 @@ interface Iprops{
 const Home = ({navigation}:Iprops) => {
     const [selectedFilter,setSelectedFilter] = useState<string>('');
     const [loading,setLoading] = useState<boolean>(false);
+    const [page,setPage] = useState<number>(2);
+    const [paging,setPaging] = useState<boolean>(false);
+    const [pagingEnded,setPagingEnded] = useState<boolean>(false);
     const moviesList = useSelector((state) => state.moviesRequestReducer.MoviesList);
 
     const dispatch = useDispatch()
@@ -28,11 +31,29 @@ const Home = ({navigation}:Iprops) => {
         //Another solution but not ideal is storing api key in .env
         dispatch(getMoviesAction(`/movie/${filterName}?api_key=4f298a53e552283bee957836a529baec`,(callback)=>setLoading(callback.loading)))
         setSelectedFilter(filterName)
+        setPagingEnded(false) // reset pagination
     }
 
     //get all genre
     const getGenreList = ():void =>{
         dispatch(getGenreAction('/genre/movie/list?api_key=4f298a53e552283bee957836a529baec',(callback)=>null))
+    }
+
+      //Paging genre list
+      const pagingGenreList = ():void =>{
+        setPaging(true)
+        dispatch(pagingMovieAction(`/movie/${selectedFilter}?page=${page}&&api_key=4f298a53e552283bee957836a529baec`,(callback)=>{
+            console.log('love ya',callback);
+
+            setPage(page+1)
+            //Check if there is no more data to paginate
+            if (callback.res?.length == 0){
+                setPagingEnded(true)
+                setPaging(false)
+              }else{
+                setPaging(false)
+              }
+        }))
     }
 
     //get all upcoming movies by default
@@ -73,6 +94,15 @@ const Home = ({navigation}:Iprops) => {
                     }}
                     keyExtractor={_keyExtractor}
                     style={{flex: 1,marginTop:height*0.02}}
+                    onEndReached={!pagingEnded && !paging ?pagingGenreList:null}
+                    onEndReachedThreshold={.01}
+                    ListFooterComponent={() => (
+                        <>
+                          {paging ? <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: height*0.03, marginBottom: height*0.03 }}>
+                            <ActivityIndicator size={25} color={'rgb(49,74,86)'} />
+                          </View> : null}
+                        </>
+                      )}
                 /> :<><Skeleton/><Skeleton/><Skeleton/><Skeleton/><Skeleton/></>}
         </SafeAreaView>
     )

@@ -20,7 +20,7 @@ const MovieCard = ({movie}:Iprops) => {
             <View style={{flex:.5}}/>
             <View style={styles.card}>
                 <View style={styles.imageArea}>
-                    <View style={{flex:1,overflow:'hidden',backgroundColor:'cyan',borderRadius:10 }}>
+                    <View style={{flex:1,overflow:'hidden',borderRadius:10 }}>
                         <Image style={{flex:1}} source={{uri:`https://image.tmdb.org/t/p/w500${movie.poster_path}`}}/>
                     </View>
                 </View>

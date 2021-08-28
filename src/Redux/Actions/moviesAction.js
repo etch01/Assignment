@@ -12,7 +12,7 @@ export const getMoviesAction = ( destination, callback) => async dispatch => {
     const responseJson = await API.get_request(destination)
     if (responseJson.results) {
         dispatch({
-            type: GET_MOVIES_REQUEST_SUCCESS, moviesList: responseJson.results,
+            type: GET_MOVIES_REQUEST_SUCCESS, moviesList: responseJson?.results,
         });
         callback({ loading: false })
 
@@ -26,27 +26,26 @@ export const getMoviesAction = ( destination, callback) => async dispatch => {
     return responseJson
 }
 
-// export const pagingCLAction = ( data, callback) => async dispatch => {
-//     dispatch({
-//         type: GET_CERTIFICATE_REQUEST,
-//     });
-//     const API = new NetworkLayer();
-//     const responseJson = await API.get_request('api/hr.employee.letter/employee_certificate_letter_list')
+export const pagingMovieAction = ( destination, callback) => async dispatch => {
+    dispatch({
+        type: GET_MOVIES_REQUEST,
+    });
+    const API = new NetworkLayer();
+    const responseJson = await API.get_request(destination)
 
-//     if (responseJson.result.http_status === 200) {
+    if (responseJson.results) {
 
-//         dispatch({
-//             type: PAGING_CR_REQUEST, RequestList: responseJson?.result.data.Data,
-//         });
-//         callback({ success: true, res:responseJson.result.data.Data })
+        dispatch({
+            type: PAGING_MOVIES_REQUEST, moviesList: responseJson?.results,
+        });
+        callback({ success: true, res: responseJson?.results})
 
-//     } else {
-//         alert(responseJson.http_status)
-//         dispatch({
-//             type: GET_CERTIFICATE_REQUEST_FAILED,
-//         });
-//         callback({ success: false ,res: null })
+    } else {
+        dispatch({
+            type: GET_MOVIES_REQUEST_FAILED,
+        });
+        callback({ success: false ,res: null })
 
-//     }
-//     return responseJson
-// }
+    }
+    return responseJson
+}
