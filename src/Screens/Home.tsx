@@ -59,8 +59,8 @@ const Home = ({navigation}:Iprops) => {
                     </TouchableOpacity>
                     <View style={{width:10}}/>
                     <View/>
-                    <TouchableOpacity onPress={()=>filter('top')} style={[styles.filterBox,{backgroundColor:selectedFilter == 'top' ? colors.mainColor : colors.boxBackgroundColor}]}>
-                        <Text style={{fontWeight:'bold',color:selectedFilter == 'top' ? colors.selectedTextColor : colors.textColor}}>Top Rated</Text>
+                    <TouchableOpacity onPress={()=>filter('top_rated')} style={[styles.filterBox,{backgroundColor:selectedFilter == 'top_rated' ? colors.mainColor : colors.boxBackgroundColor}]}>
+                        <Text style={{fontWeight:'bold',color:selectedFilter == 'top_rated' ? colors.selectedTextColor : colors.textColor}}>Top Rated</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.space}/>
