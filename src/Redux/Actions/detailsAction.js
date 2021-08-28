@@ -10,7 +10,6 @@ export const getDetailsAction = ( destination, callback) => async dispatch => {
     callback({ loading: true })
     const API = new NetworkLayer();
     const responseJson = await API.get_request(destination)
-    console.log(responseJson);
     if (responseJson) {
         dispatch({
             type: GET_DETAILS_REQUEST_SUCCESS, details: responseJson,
