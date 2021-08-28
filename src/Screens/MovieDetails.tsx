@@ -1,6 +1,7 @@
 import React, {useState,useEffect} from 'react';
 import { StyleSheet, Text, View, SafeAreaView, ActivityIndicator, Image, Dimensions, ScrollView } from 'react-native';
 import {getDetailsAction} from '../Redux/Actions/detailsAction';
+import {getCreditsAction} from '../Redux/Actions/creditsAction';
 import { useDispatch, useSelector } from 'react-redux';
 import {colors} from '../Constants/colors';
 import Header from '../Components/Header'
@@ -16,6 +17,7 @@ const MovieDetails = ({route}:Iprops) => {
 
     const [loading,setLoading] = useState<boolean>(true);
     const details = useSelector((state) => state.moviesDetailsReducer.details);
+    const credits = useSelector((state) => state.creditsRequestReducer.credits);
     const dispatch = useDispatch()
 
     const getMovieDetails = (): void =>{
@@ -24,8 +26,15 @@ const MovieDetails = ({route}:Iprops) => {
         }))
     }
 
+    const getCredits = (): void =>{
+        dispatch(getCreditsAction(`/movie/${id}/credits?api_key=4f298a53e552283bee957836a529baec`,callback=>{            
+            setLoading(callback.loading)
+        }))
+    }
+
     useEffect(()=>{
         getMovieDetails();
+        getCredits();
     },[])
     
     return (
@@ -71,13 +80,21 @@ const MovieDetails = ({route}:Iprops) => {
                 </View>
             <View style={{flex:.5}}/>
             </View>
-            {/* credits */}
+            {/* credits (popularity more than 10)*/}
+
+            <Text style={[styles.header,{marginLeft:width*0.05,marginTop:height*0.02}]}>Credits:</Text>
             <ScrollView horizontal={true} style={{marginTop:height*0.02}}>
-                {details.production_companies.map(co=>(
-                    <View style={styles.icon} key={co.id}>
-                        <Image resizeMode='contain' style={{flex:1}} source={{uri:`https://image.tmdb.org/t/p/w500${co.logo_path}`}}/>
+                {credits.map(credit=>{
+                if (credit.popularity > 10){
+                return(
+                    <View key={credit.id}>
+                    <View style={styles.icon}>
+                        <Image resizeMode='cover' style={{flex:1}} source={{uri:`https://image.tmdb.org/t/p/w500${credit.profile_path}`}}/>
                      </View>
-                ))}
+                     <Text style={{textAlign:'center',marginTop:height*0.01}}>{credit.name}</Text>
+                    </View>
+
+                )}})}
             </ScrollView>
             </ScrollView>
             :
@@ -137,10 +154,10 @@ const styles = StyleSheet.create({
         paddingRight:10
     },
     icon:{
-        width:height*.1,
-        height:height*.1,
+        width:height*.09,
+        height:height*.09,
         alignSelf:'center',
-        borderRadius:height*.05,
+        borderRadius:height*.045,
         overflow:'hidden',
         marginRight:width*0.05,
         marginLeft:width*0.05
