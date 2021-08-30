@@ -9,10 +9,11 @@ import Header from '../Components/Header'
 const {width, height} = Dimensions.get('window');
 
 interface Iprops{
-    route:any
+    route:any;
+    navigation:any;
 }
 
-const MovieDetails = ({route}:Iprops) => {
+const MovieDetails = ({route, navigation}:Iprops) => {
     const { id } = route.params;
 
     const [loading,setLoading] = useState<boolean>(true);
@@ -39,7 +40,7 @@ const MovieDetails = ({route}:Iprops) => {
     
     return (
         <SafeAreaView style={styles.container}>
-            <Header HomeHeader={false}/>
+            <Header HomeHeader={false} BackPress={()=>navigation.goBack()}/>
             {!loading?
             <ScrollView>
             {/* image , title and vote rating */}
